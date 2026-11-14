@@ -121,7 +121,7 @@ Open **[vizora.zayeedbinkabir.com](https://vizora.zayeedbinkabir.com)**. Nothing
 In Chrome or Edge, open the site and click **Install app** in the top bar (or the install icon in the address bar). Vizora gets its own window, a Dock or Start menu icon, and works offline.
 
 ### 🖥️ As a desktop app
-Native installers for every platform are on the **[Releases page](https://github.com/jayeed17/vizora/releases)**. The installers are about 2 MB (it uses your system's built-in web engine instead of bundling a browser), work fully offline, and saves files through your system's Save dialog.
+Native installers for every platform are on the **[Releases page](https://github.com/jayeed17/vizora/releases)**. The installers are about 2 MB (it uses your system's built-in web engine instead of bundling a browser), work fully offline, and save files through your system's Save dialog.
 
 | Platform | File |
 |---|---|
