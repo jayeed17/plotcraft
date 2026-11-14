@@ -1,6 +1,6 @@
 // Vizora service worker: caches the app shell so Vizora opens offline and can be installed.
 // Bump VERSION when shipping changes; old caches are dropped on activate.
-const VERSION = 'vizora-v1';
+const VERSION = 'vizora-v2';
 const SHELL = [
   '/',
   '/manifest.webmanifest',
@@ -30,6 +30,8 @@ const SHELL = [
   '/vendor/fonts/fonts.css',
   '/vendor/fonts/ibm-plex-mono-latin-400-normal.woff2',
   '/vendor/fonts/ibm-plex-mono-latin-500-normal.woff2',
+  '/icons/icon.svg',
+  '/icons/favicon-32.png',
   '/icons/icon-192.png',
   '/icons/icon-512.png'
 ];

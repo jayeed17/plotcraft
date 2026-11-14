@@ -14,7 +14,7 @@
 
 <p align="center">
   <img alt="Plain JavaScript" src="https://img.shields.io/badge/JavaScript-no%20build%20step-f7df1e?logo=javascript&logoColor=black">
-  <img alt="Web · macOS · Windows · Linux" src="https://img.shields.io/badge/Web%20%C2%B7%20macOS%20%C2%B7%20Windows%20%C2%B7%20Linux-2b3bb8">
+  <img alt="Web · macOS · Windows · Linux" src="https://img.shields.io/badge/Web%20%C2%B7%20macOS%20%C2%B7%20Windows%20%C2%B7%20Linux-4b3fe0">
   <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-1baf7a">
   <img alt="Status: early alpha" src="https://img.shields.io/badge/status-early%20alpha-eda100">
   <img alt="Checked against DuckDB" src="https://img.shields.io/badge/engine-checked%20against%20DuckDB-fff000?logo=duckdb&logoColor=black">
