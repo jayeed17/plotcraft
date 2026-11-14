@@ -1,7 +1,7 @@
 {
-  "name": "plotcraft-tests",
+  "name": "vizora-tests",
   "private": true,
-  "description": "Browser and DuckDB parity tests for Plotcraft",
+  "description": "Browser and DuckDB parity tests for Vizora",
   "scripts": {
     "test": "node smoke.js && node interact.js && node parity.js && python3 duckdb_parity.py"
   },

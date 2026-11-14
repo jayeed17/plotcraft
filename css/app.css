@@ -346,7 +346,7 @@ pre.sql .cm { color: var(--muted); }
   .dash { padding: 10px; }
 }
 
-/* ---------- Plotcraft additions ---------- */
+/* ---------- Vizora additions ---------- */
 :root { --good: #006300; --bad: #d03b3b; }
 :root[data-theme="dark"] { --good: #0ca30c; --bad: #e66767; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --good: #0ca30c; --bad: #e66767; } }

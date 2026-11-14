@@ -24,7 +24,7 @@ export function newDashboard(name, tiles = []) { return { id: uid(), name, tiles
 export function projectJSON(withData = true) {
   const m = state.model;
   return {
-    app: 'plotcraft', version: 2,
+    app: 'vizora', version: 2,
     tables: m.tables.map(t => ({ id: t.id, name: t.name, format: t.format, ...(withData && t.format !== 'sample' ? { text: t.text } : {}), names: t.names })),
     joins: m.joins, fields: m.fields, calcs: m.calcs,
     sheets: state.sheets, dashboards: state.dashboards, active: state.active
@@ -32,7 +32,7 @@ export function projectJSON(withData = true) {
 }
 
 /* ---------- IndexedDB ---------- */
-const DB = 'plotcraft', STORE = 'project', KEY = 'current';
+const DB = 'vizora', STORE = 'project', KEY = 'current';
 function idb() {
   return new Promise((res, rej) => {
     let req;

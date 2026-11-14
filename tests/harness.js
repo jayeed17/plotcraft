@@ -1,4 +1,4 @@
-// Serves the app at https://plotcraft.test/ under a strict content security policy (no eval, no remote fetch),
+// Serves the app at https://vizora.test/ under a strict content security policy (no eval, no remote fetch),
 // with the CDN libraries answered from node_modules, so tests run offline.
 const path = require('path');
 const fs = require('fs');
@@ -20,7 +20,7 @@ async function open(opts = {}) {
   page.on('console', m => { if (m.type() === 'error' || m.type() === 'warning') errors.push(m.type() + ': ' + m.text()); });
   await page.route('**/*', async route => {
     const url = new URL(route.request().url());
-    if (url.host === 'plotcraft.test') {
+    if (url.host === 'vizora.test') {
       const p = url.pathname === '/' ? '/index.html' : url.pathname;
       const file = path.join(ROOT, decodeURIComponent(p));
       if (!fs.existsSync(file)) return route.fulfill({ status: 404, body: '' });
@@ -32,10 +32,10 @@ async function open(opts = {}) {
     return route.fulfill({ status: 404, body: '' });
   });
   if (opts.clean !== false) {
-    await page.goto('https://plotcraft.test/index.html');
-    await page.evaluate(() => new Promise(r => { const q = indexedDB.deleteDatabase('plotcraft'); q.onsuccess = q.onerror = q.onblocked = () => r(); }));
+    await page.goto('https://vizora.test/index.html');
+    await page.evaluate(() => new Promise(r => { const q = indexedDB.deleteDatabase('vizora'); q.onsuccess = q.onerror = q.onblocked = () => r(); }));
   }
-  await page.goto('https://plotcraft.test/');
+  await page.goto('https://vizora.test/');
   return { browser, context, page, errors };
 }
 module.exports = { open };

@@ -51,12 +51,12 @@ export async function openDataFile(file) {
 export function saveWorkbook(withData) {
   const json = JSON.stringify(projectJSON(withData), null, withData ? 0 : 2);
   const base = state.model.tables[0].base || 'workbook';
-  offerFile(`${base}${withData ? '' : '.layout'}.plotcraft.json`, json);
+  offerFile(`${base}${withData ? '' : '.layout'}.vizora.json`, json);
 }
 export async function openWorkbook(file) {
   try {
     const wb = JSON.parse(await readFileText(file));
-    if (wb.app !== 'plotcraft' || !Array.isArray(wb.sheets)) throw new Error('this is not a Plotcraft workbook');
+    if (!['vizora','plotcraft'].includes(wb.app) || !Array.isArray(wb.sheets)) throw new Error('this is not a Vizora workbook');
     const tables = [];
     for (const t of wb.tables) {
       if (t.format === 'sample') { const s = sampleTables().find(x => x.id === t.id); if (s) { tables.push(s); continue; } }

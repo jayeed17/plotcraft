@@ -1,10 +1,10 @@
-# Plotcraft
+# Vizora
 
 **A free, open-source BI studio that runs in your browser.** Drag fields onto shelves like in Tableau, build Power BI-style dashboards with slicers and cross-filtering, write calculated fields, join tables. Your data never leaves your device.
 
-**Live app:** https://plotcraft-alpha.vercel.app
+**Live app:** https://vizora-bi.vercel.app
 
-![A Plotcraft dashboard: KPI cards with sparklines, a borough slicer, a line chart, a donut, a bar chart, a heatmap, a matrix and a histogram](docs/dashboard.png)
+![A Vizora dashboard: KPI cards with sparklines, a borough slicer, a line chart, a donut, a bar chart, a heatmap, a matrix and a histogram](docs/dashboard.png)
 
 ## What it does
 
@@ -33,7 +33,7 @@
 
 **Projects**
 - Your project (data included) is saved in the browser's IndexedDB and is still there after a reload.
-- Save or open a workbook as `.plotcraft.json`, with or without the data. Export charts as PNG/SVG and tables as CSV.
+- Save or open a workbook as `.vizora.json`, with or without the data. Export charts as PNG/SVG and tables as CSV.
 - Light and dark themes. Works on phones; on small screens the dashboard stacks into one column.
 
 ![The calculated field editor with a live preview](docs/calculated-field.png)
@@ -43,8 +43,8 @@
 It is a static site with no build step:
 
 ```bash
-git clone https://github.com/jayeed17/plotcraft
-cd plotcraft
+git clone https://github.com/jayeed17/vizora
+cd vizora
 python3 -m http.server 8000      # or: npx serve .
 # open http://localhost:8000
 ```
@@ -66,7 +66,7 @@ Charts are drawn with [Vega-Lite](https://vega.github.io/vega-lite/) and CSV par
 
 ## Tests
 
-The engine is checked against **DuckDB**. A test drives every chart type in a headless browser, takes the SQL Plotcraft generates, runs it in DuckDB, and compares every row. That includes joins, calculated fields, bins, cross-filters, US dates and currency text.
+The engine is checked against **DuckDB**. A test drives every chart type in a headless browser, takes the SQL Vizora generates, runs it in DuckDB, and compares every row. That includes joins, calculated fields, bins, cross-filters, US dates and currency text.
 
 ```bash
 cd tests && npm install

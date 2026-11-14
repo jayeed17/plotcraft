@@ -1,4 +1,4 @@
-// Plotcraft: boot, tabs, top bar and the sample project.
+// Vizora: boot, tabs, top bar and the sample project.
 import { $, $$, esc, nf0, debounce, toast, on, emit } from './util.js';
 import { state, newSheet, newDashboard, persist, loadSaved, clearSaved } from './store.js';
 import { sampleTables, buildDataset } from './data.js';
@@ -116,7 +116,7 @@ $('#themeBtn').addEventListener('click', () => {
   const root = document.documentElement;
   const dark = root.getAttribute('data-theme') ? root.getAttribute('data-theme') === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
   root.setAttribute('data-theme', dark ? 'light' : 'dark');
-  try { localStorage.setItem('plotcraft:theme', dark ? 'light' : 'dark'); } catch (err) {}
+  try { localStorage.setItem('vizora:theme', dark ? 'light' : 'dark'); } catch (err) {}
 });
 $('#projectBtn').addEventListener('click', e => {
   const a = state.active, canSave = exportMode !== 'none';
@@ -157,7 +157,7 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener('change', rerender);
 new MutationObserver(rerender).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
 (async function boot() {
-  try { const t = localStorage.getItem('plotcraft:theme'); if (t && !document.documentElement.getAttribute('data-theme')) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+  try { const t = localStorage.getItem('vizora:theme'); if (t && !document.documentElement.getAttribute('data-theme')) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
   initMenus(); initSheetEvents(); initDashEvents(); initSourceEvents(openCalcEditor); startExports();
   if (typeof vegaEmbed === 'undefined' || typeof Papa === 'undefined') {
     $('#chart').innerHTML = '<div class="error-box"><strong>The chart engine did not load.</strong><p>Check your connection and reload the page.</p></div>';
@@ -171,4 +171,4 @@ new MutationObserver(rerender).observe(document.documentElement, { attributes: t
 })();
 
 // test hook
-window.__plotcraft = { state, emit, sampleProject };
+window.__vizora = { state, emit, sampleProject };
