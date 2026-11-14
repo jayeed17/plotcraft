@@ -2,7 +2,7 @@
 
 **A free, open-source BI studio that runs in your browser.** Drag fields onto shelves like in Tableau, build Power BI-style dashboards with slicers and cross-filtering, write calculated fields, join tables. Your data never leaves your device.
 
-**Live app:** https://plotcraft.vercel.app
+**Live app:** https://plotcraft-alpha.vercel.app
 
 ![A Plotcraft dashboard: KPI cards with sparklines, a borough slicer, a line chart, a donut, a bar chart, a heatmap, a matrix and a histogram](docs/dashboard.png)
 
