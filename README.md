@@ -121,14 +121,14 @@ Open **[vizora.zayeedbinkabir.com](https://vizora.zayeedbinkabir.com)**. Nothing
 In Chrome or Edge, open the site and click **Install app** in the top bar (or the install icon in the address bar). Vizora gets its own window, a Dock or Start menu icon, and works offline.
 
 ### 🖥️ As a desktop app
-Native installers for every platform are on the **[Releases page](https://github.com/jayeed17/vizora/releases)**. The desktop app uses your system's built-in web engine (so it stays small, unlike Electron apps), works fully offline, and saves files through your system's Save dialog.
+Native installers for every platform are on the **[Releases page](https://github.com/jayeed17/vizora/releases)**. The installers are about 2 MB (it uses your system's built-in web engine instead of bundling a browser), work fully offline, and saves files through your system's Save dialog.
 
 | Platform | File |
 |---|---|
 | Mac with Apple silicon (M1 and newer) | `Vizora_<version>_aarch64.dmg` |
 | Mac with Intel | `Vizora_<version>_x64.dmg` |
 | Windows 10 and 11 | `Vizora_<version>_x64-setup.exe` or `.msi` |
-| Linux | `.AppImage` (any distro), `.deb` (Ubuntu, Debian) or `.rpm` (Fedora) |
+| Linux | `.deb` (Ubuntu, Debian), `.rpm` (Fedora) or `.AppImage` (any distro; larger because it bundles its libraries) |
 
 > [!NOTE]
 > The installers aren't code-signed yet, so your computer will warn you the first time.
