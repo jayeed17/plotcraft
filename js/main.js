@@ -8,7 +8,7 @@ import { renderDataPane, renderShelves, renderSheetView, initSheetEvents, sheet 
 import { renderDashboard, initDashEvents, dash } from './dashboard.js';
 import { openCalcEditor } from './calc.js';
 import { initMenus, openMenu } from './ui.js';
-import { startExports, offerFile, openDataFile, saveWorkbook, openWorkbook, restoreSaved, exportMode } from './files.js';
+import { startExports, offerFile, openDataFile, saveWorkbook, openWorkbook, restoreSaved, exportMode, isDesktop } from './files.js';
 
 /* ---------------- sample project ---------------- */
 function sampleProject() {
@@ -169,6 +169,28 @@ new MutationObserver(rerender).observe(document.documentElement, { attributes: t
   if (saved) { try { ok = restoreSaved(saved); } catch (e) { ok = false; } }
   if (!ok) sampleProject();
 })();
+
+// Installable web app: offline cache plus an "Install app" button where the browser supports it.
+if ('serviceWorker' in navigator && !isDesktop && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+}
+let installPrompt = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installPrompt = e; $('#installBtn').hidden = false; });
+window.addEventListener('appinstalled', () => { installPrompt = null; $('#installBtn').hidden = true; toast('Vizora is installed. Open it from your apps.'); });
+$('#installBtn').addEventListener('click', async () => {
+  if (!installPrompt) return;
+  installPrompt.prompt();
+  try { await installPrompt.userChoice; } catch (e) {}
+  installPrompt = null; $('#installBtn').hidden = true;
+});
+if (isDesktop) {
+  document.documentElement.classList.add('desktop');
+  // keep the app window on Vizora: web links open in the system browser
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="http"]');
+    if (a && window.__TAURI__.opener) { e.preventDefault(); window.__TAURI__.opener.openUrl(a.href).catch(() => {}); }
+  });
+}
 
 // test hook
 window.__vizora = { state, emit, sampleProject };

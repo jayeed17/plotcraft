@@ -5,10 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vizora</title>
 <meta name="description" content="Vizora is a free, open-source business intelligence studio that runs in your browser: drag-and-drop charts, calculated fields, joins and interactive dashboards. Your data never leaves your device.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect width='20' height='20' rx='4' fill='%232b3bb8'/%3E%3Crect x='4' y='10' width='3' height='6' rx='1' fill='white'/%3E%3Crect x='8.5' y='6' width='3' height='10' rx='1' fill='white'/%3E%3Crect x='13' y='3.5' width='3' height='12.5' rx='1' fill='white'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#2b3bb8">
+<meta name="apple-mobile-web-app-title" content="Vizora">
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
 <link rel="stylesheet" href="css/app.css">
 </head>
 <body data-mode="sheet">
@@ -25,6 +28,7 @@
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 11V2M4.5 5.5 8 2l3.5 3.5M2.5 10.5v3h11v-3"/></svg>
         Open CSV or JSON
       </button>
+      <button class="btn" id="installBtn" type="button" hidden title="Install Vizora as an app on this computer">Install app</button>
       <button class="btn" id="projectBtn" type="button" aria-haspopup="menu">Project</button>
       <button class="btn quiet icon" id="themeBtn" type="button" aria-label="Switch light or dark theme" title="Switch light or dark theme">
         <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.8a6.2 6.2 0 0 1 0 12.4z" fill="currentColor"/></svg>
@@ -116,10 +120,10 @@
 <div class="toast" id="toast" role="status" hidden></div>
 <div class="dropzone" id="dropzone" hidden>Drop to open this file</div>
 
-<script src="https://cdn.jsdelivr.net/npm/vega@5.30.0/build/vega.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vega-lite@5.21.0/build/vega-lite.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vega-embed@6.26.0/build/vega-embed.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="vendor/vega.min.js"></script>
+<script src="vendor/vega-lite.min.js"></script>
+<script src="vendor/vega-embed.min.js"></script>
+<script src="vendor/papaparse.min.js"></script>
 <script type="module" src="js/main.js"></script>
 </body>
 </html>

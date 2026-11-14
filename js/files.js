@@ -1,11 +1,13 @@
-// Opening data and workbooks, saving files (the claude.ai downloads capability, or a plain download link).
+// Opening data and workbooks, saving files: native Save dialog in the desktop app, the claude.ai downloads
+// capability inside an artifact, or a plain download link in a browser.
 import { toast, nf0, emit } from './util.js';
 import { state, newSheet, newDashboard, projectJSON, persist } from './store.js';
 import { parseTable, sampleTables } from './data.js';
 import { rebuild } from './model.js';
 
 let downloadsCap = null;
-export let exportMode = 'none';   // 'cap' | 'anchor' | 'none'
+export let exportMode = 'none';   // 'tauri' | 'cap' | 'anchor' | 'none'
+export const isDesktop = !!(window.__TAURI__ && window.__TAURI__.dialog && window.__TAURI__.fs);
 function setMode(m, cap) { exportMode = m; downloadsCap = cap || null; emit('exportmode', m); }
 export function initExports() {
   const c = window.claude;
@@ -13,9 +15,23 @@ export function initExports() {
   return false;
 }
 export function startExports() {
+  if (isDesktop) { setMode('tauri'); return; }
   if (!initExports()) setTimeout(() => { if (!initExports()) setMode(window.top === window ? 'anchor' : 'none'); }, 1200);
 }
+const EXT_NAMES = { png: 'PNG image', svg: 'SVG image', csv: 'CSV table', json: 'Vizora workbook' };
+async function saveNative(filename, data) {
+  const ext = filename.split('.').pop().toLowerCase();
+  const path = await window.__TAURI__.dialog.save({ defaultPath: filename, filters: [{ name: EXT_NAMES[ext] || ext.toUpperCase(), extensions: [ext] }] });
+  if (!path) return;
+  if (data instanceof Uint8Array) await window.__TAURI__.fs.writeFile(path, data);
+  else await window.__TAURI__.fs.writeTextFile(path, String(data));
+  toast(`Saved ${path.split(/[\\/]/).pop()}`);
+}
 export async function offerFile(filename, data) {
+  if (exportMode === 'tauri') {
+    try { await saveNative(filename, data); } catch (e) { toast(`Could not save ${filename}${e && e.message ? ': ' + e.message : e ? ': ' + e : ''}`); }
+    return;
+  }
   if (exportMode === 'cap' && downloadsCap) {
     try { await downloadsCap.save({ filename, data }); toast(`Saved ${filename}`); }
     catch (e) {

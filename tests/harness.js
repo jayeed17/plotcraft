@@ -7,17 +7,17 @@ const { chromium } = require('playwright');
 const ROOT = path.join(__dirname, '..');
 const LIBS = [process.env.LIBS_DIR, path.join(__dirname, 'node_modules'), path.join(ROOT, 'node_modules')].filter(Boolean).find(d => fs.existsSync(path.join(d, 'vega')));
 const CSP = ["default-src 'none'", "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net/npm/", "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-  "font-src https://fonts.gstatic.com data:", "img-src data: blob:", "connect-src 'self'", "worker-src blob:"].join('; ');
-const TYPES = { '.html': 'text/html', '.js': 'application/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png' };
+  "font-src 'self' data:", "img-src 'self' data: blob:", "connect-src 'self'", "worker-src 'self' blob:", "manifest-src 'self'"].join('; ');
+const TYPES = { '.html': 'text/html', '.js': 'application/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.woff2': 'font/woff2', '.webmanifest': 'application/manifest+json' };
 
 async function open(opts = {}) {
   const exe = ['/opt/pw-browsers/chromium-1194/chrome-linux/chrome'].find(p => fs.existsSync(p));
   const browser = await chromium.launch(exe ? { executablePath: exe } : {});
-  const context = await browser.newContext({ viewport: opts.viewport || { width: 1440, height: 900 }, colorScheme: opts.colorScheme || 'light' });
+  const context = await browser.newContext({ viewport: opts.viewport || { width: 1440, height: 900 }, colorScheme: opts.colorScheme || 'light', serviceWorkers: opts.serviceWorkers || 'block' });
   const page = await context.newPage();
   const errors = [];
   page.on('pageerror', e => errors.push('pageerror: ' + e.message));
-  page.on('console', m => { if (m.type() === 'error' || m.type() === 'warning') errors.push(m.type() + ': ' + m.text()); });
+  page.on('console', m => { if (/Service Worker registration blocked/.test(m.text())) return; if (m.type() === 'error' || m.type() === 'warning') errors.push(m.type() + ': ' + m.text()); });
   await page.route('**/*', async route => {
     const url = new URL(route.request().url());
     if (url.host === 'vizora.test') {

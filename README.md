@@ -14,7 +14,7 @@
 
 <p align="center">
   <img alt="Plain JavaScript" src="https://img.shields.io/badge/JavaScript-no%20build%20step-f7df1e?logo=javascript&logoColor=black">
-  <img alt="Runs in any modern browser" src="https://img.shields.io/badge/runs%20in-any%20modern%20browser-2b3bb8">
+  <img alt="Web · macOS · Windows · Linux" src="https://img.shields.io/badge/Web%20%C2%B7%20macOS%20%C2%B7%20Windows%20%C2%B7%20Linux-2b3bb8">
   <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-1baf7a">
   <img alt="Status: early alpha" src="https://img.shields.io/badge/status-early%20alpha-eda100">
   <img alt="Checked against DuckDB" src="https://img.shields.io/badge/engine-checked%20against%20DuckDB-fff000?logo=duckdb&logoColor=black">
@@ -23,6 +23,7 @@
 <p align="center">
   <a href="https://vizora.zayeedbinkabir.com"><b>Open Vizora</b></a> ·
   <a href="#features">Features</a> ·
+  <a href="#downloads">Downloads</a> ·
   <a href="#get-started">Run it locally</a> ·
   <a href="#under-the-hood">How it works</a> ·
   <a href="#roadmap">Roadmap</a>
@@ -109,9 +110,35 @@ Logic: `IF / ELSEIF / ELSE`, `AND`, `OR`, `NOT`, `IIF`, `ZN`, `IFNULL`, `ISNULL`
 #### 🗂️ Data in, data out
 CSV, TSV and JSON in. Types are detected automatically, including currency text like `"$1,200.50"` and US dates like `1/5/2024`. Export charts as PNG or SVG, tables as CSV, and whole workbooks as `.vizora.json` (with or without the data).
 
+## Downloads
+
+Vizora runs three ways. They're all the same app, and none of them sends your data anywhere.
+
+### 🌐 In your browser
+Open **[vizora.zayeedbinkabir.com](https://vizora.zayeedbinkabir.com)**. Nothing to install.
+
+### 📌 As an installed web app
+In Chrome or Edge, open the site and click **Install app** in the top bar (or the install icon in the address bar). Vizora gets its own window, a Dock or Start menu icon, and works offline.
+
+### 🖥️ As a desktop app
+Native installers for every platform are on the **[Releases page](https://github.com/jayeed17/vizora/releases)**. The desktop app uses your system's built-in web engine (so it stays small, unlike Electron apps), works fully offline, and saves files through your system's Save dialog.
+
+| Platform | File |
+|---|---|
+| Mac with Apple silicon (M1 and newer) | `Vizora_<version>_aarch64.dmg` |
+| Mac with Intel | `Vizora_<version>_x64.dmg` |
+| Windows 10 and 11 | `Vizora_<version>_x64-setup.exe` or `.msi` |
+| Linux | `.AppImage` (any distro), `.deb` (Ubuntu, Debian) or `.rpm` (Fedora) |
+
+> [!NOTE]
+> The installers aren't code-signed yet, so your computer will warn you the first time.
+> **Mac:** drag Vizora to Applications, then right-click it and choose **Open**. If macOS still blocks it, run `xattr -cr /Applications/Vizora.app` in Terminal.
+> **Windows:** on the SmartScreen prompt, click **More info**, then **Run anyway**.
+> **Linux AppImage:** `chmod +x Vizora_*.AppImage`, then run it.
+
 ## Get started
 
-Vizora is a static site with no build step. Clone it and serve the folder:
+Vizora's web app is a static site with no build step. Clone it and serve the folder:
 
 ```bash
 git clone https://github.com/jayeed17/vizora
@@ -120,7 +147,22 @@ python3 -m http.server 8000      # or: npx serve .
 # open http://localhost:8000
 ```
 
-Or just use the hosted version at **[vizora.zayeedbinkabir.com](https://vizora.zayeedbinkabir.com)**.
+### Build the desktop app
+
+The desktop app lives in [`desktop/`](desktop) and wraps the same files in a native window with [Tauri](https://tauri.app). You need [Rust](https://rustup.rs) and Node.js, plus on Linux the WebKitGTK packages listed in the [Tauri prerequisites](https://tauri.app/start/prerequisites/).
+
+```bash
+cd desktop
+npm install
+npm run dev      # opens Vizora in a desktop window
+npm run build    # makes installers in desktop/src-tauri/target/release/bundle
+```
+
+To publish a release, push a version tag. GitHub Actions builds the Mac, Windows and Linux installers and attaches them to a new release:
+
+```bash
+git tag v0.1.0 && git push origin v0.1.0
+```
 
 ## Under the hood
 
@@ -139,6 +181,10 @@ Or just use the hosted version at **[vizora.zayeedbinkabir.com](https://vizora.z
 | `js/visuals.js` | Matrix with totals, KPI cards, gauge |
 | `js/dashboard.js` | Canvas layout, drag/resize, slicers, cross-filtering |
 | `js/sheet.js`, `js/model.js`, `js/calc.js` | Worksheet UI, data source view, formula editor |
+| `js/files.js` | Opening and saving files: native Save dialog on desktop, a download in the browser |
+| `sw.js`, `manifest.webmanifest` | Offline cache and install support for the web app |
+| `desktop/` | Tauri wrapper that turns the web app into Mac, Windows and Linux apps |
+| `vendor/` | Vega, Vega-Lite, Vega-Embed, Papa Parse and the fonts, bundled so Vizora works offline |
 
 ### Run the tests
 
@@ -158,6 +204,7 @@ node tests/parity.js && pip install duckdb && python3 tests/duckdb_parity.py
 - [ ] Parameters, table calculations and drill-down hierarchies
 - [ ] Dashboard export to PDF and PNG
 - [ ] Shareable read-only dashboard links
+- [ ] Signed and notarized desktop installers, plus auto-update
 
 Ideas and bug reports are welcome in [Issues](https://github.com/jayeed17/vizora/issues).
 
