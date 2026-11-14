@@ -1,46 +1,117 @@
-# Vizora
+<p align="center">
+  <img src="docs/logo.svg" width="96" height="96" alt="Vizora logo">
+</p>
 
-**A free, open-source BI studio that runs in your browser.** Drag fields onto shelves like in Tableau, build Power BI-style dashboards with slicers and cross-filtering, write calculated fields, join tables. Your data never leaves your device.
+<h1 align="center">Vizora</h1>
 
-**Live app:** https://vizora.zayeedbinkabir.com
+<p align="center">
+  <b>Tableau-style charts and Power BI-style dashboards, free and open source, running entirely in your browser.</b>
+</p>
 
-![A Vizora dashboard: KPI cards with sparklines, a borough slicer, a line chart, a donut, a bar chart, a heatmap, a matrix and a histogram](docs/dashboard.png)
+<p align="center">
+  Drop in a CSV, drag fields onto shelves, write calculated fields, join tables and build interactive dashboards with slicers and cross-filtering. No install, no account, no server: your data never leaves your device.
+</p>
 
-## What it does
+<p align="center">
+  <img alt="Plain JavaScript" src="https://img.shields.io/badge/JavaScript-no%20build%20step-f7df1e?logo=javascript&logoColor=black">
+  <img alt="Runs in any modern browser" src="https://img.shields.io/badge/runs%20in-any%20modern%20browser-2b3bb8">
+  <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-1baf7a">
+  <img alt="Status: early alpha" src="https://img.shields.io/badge/status-early%20alpha-eda100">
+  <img alt="Checked against DuckDB" src="https://img.shields.io/badge/engine-checked%20against%20DuckDB-fff000?logo=duckdb&logoColor=black">
+</p>
 
-**Build charts (the Tableau part)**
-- Drag fields onto **Columns, Rows, Color, Size, Label, Detail and Filters**. Text fields split the view into categories; numbers and dates become axes.
-- **Automatic mark** choice, or pick one: bar, line, area, circle (scatter), square (heatmap), text table, tick, **pie, donut, treemap**.
-- Aggregations: sum, average, median, min, max, count, count distinct.
-- Dates as timelines (year, quarter, month, week, day) or categories (month of year, weekday, hour).
-- **Bins and histograms** for any number field, sort by value, small multiples from extra fields on a shelf.
-- **Data** and **SQL** tabs for every chart. The SQL tab gives a DuckDB query that returns the same table.
+<p align="center">
+  <a href="https://vizora.zayeedbinkabir.com"><b>Open Vizora</b></a> ·
+  <a href="#features">Features</a> ·
+  <a href="#get-started">Run it locally</a> ·
+  <a href="#under-the-hood">How it works</a> ·
+  <a href="#roadmap">Roadmap</a>
+</p>
 
-**Dashboards (the Power BI part)**
-- A 12-column canvas: drag tiles to move them and pull the corner to resize them.
-- Tiles: any sheet, **KPI cards** (value, trend sparkline, change vs the previous period), **slicers**, text.
-- **Cross-filtering**: click a bar, slice, cell or point and every other tile filters to it.
-- **Matrix with row and column totals**, with conditional colour, plus a **gauge** visual.
+<p align="center">
+  <a href="https://vizora.zayeedbinkabir.com"><img src="docs/dashboard.png" alt="A Vizora dashboard: KPI cards with sparklines, a borough slicer, a line chart, a donut, a bar chart, a heatmap, a matrix and a histogram"></a>
+  <br>
+  <i>The built-in sample dashboard: 9,000 synthetic NYC taxi trips joined to 2020 census populations. Click any bar, slice or cell to filter everything else.</i>
+</p>
 
-**Data model**
-- Open CSV, TSV or JSON. Types are detected: currency strings like `"$1,200.50"`, US dates like `1/5/2024`, blanks.
-- **Join** extra tables (left or inner) on a shared column, like a Power BI relationship. The editor shows how many rows match.
-- Rename, retype, hide, or switch fields between dimension and measure. Every sheet, dashboard and formula updates.
-- **Calculated fields** with a Tableau-style formula language:
-  - row-level: `IF [trip_distance] >= 10 THEN "Long" ELSE "Short" END`, `DATEDIFF('day', [Order Date], [Ship Date])`
-  - aggregate, like a DAX measure: `SUM([tip_amount]) / SUM([fare_amount]) * 100`
-  - 45+ functions (logic, math, text, dates). The editor checks types as you type, points to the error, and previews the result.
+> [!NOTE]
+> Vizora opens with a sample project so you can click around right away. Use **Open CSV or JSON** to load your own data; it stays in your browser.
 
-**Projects**
-- Your project (data included) is saved in the browser's IndexedDB and is still there after a reload.
-- Save or open a workbook as `.vizora.json`, with or without the data. Export charts as PNG/SVG and tables as CSV.
-- Light and dark themes. Works on phones; on small screens the dashboard stacks into one column.
+---
 
-![The calculated field editor with a live preview](docs/calculated-field.png)
+### 🧲 Drag, drop, done
+Columns, Rows, Color, Size, Label, Detail and Filters shelves work the way Tableau users expect. Vizora picks a sensible chart automatically, and you can override it anytime.
 
-## Run it locally
+### 📊 Dashboards that talk to each other
+A 12-column canvas with KPI cards, slicers, text and any sheet. Click a mark and every other tile cross-filters, the way Power BI does it.
 
-It is a static site with no build step:
+### 🧮 A real formula language
+Row-level and aggregate calculated fields with 45+ functions, type checking as you type, and a live preview. Think Tableau calcs and DAX measures in one place.
+
+### 🔒 Private by default
+Everything runs client-side. Projects save to your browser's IndexedDB, and nothing is uploaded anywhere.
+
+## Features
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="docs/worksheet.png"><img src="docs/worksheet.png" alt="The worksheet: data pane, shelves and a line chart of fares by month and borough"></a>
+      <h4>Shelves and automatic charts</h4>
+      Drag a date onto Columns and a measure onto Rows and you get a timeline. Add a dimension to Color and it splits into series. Text fields become categories, numbers and dates become axes.
+    </td>
+    <td width="50%" valign="top">
+      <a href="docs/calculated-field.png"><img src="docs/calculated-field.png" alt="The calculated field editor with a live preview"></a>
+      <h4>Calculated fields</h4>
+      <code>IF [trip_distance] >= 10 THEN "Long" ELSE "Short" END</code> or <code>SUM([tip_amount]) / SUM([fare_amount]) * 100</code>. Errors point at the exact spot, and the preview updates as you type.
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="docs/data-source.png"><img src="docs/data-source.png" alt="The data source view showing a left join and the fields grid"></a>
+      <h4>Data model and joins</h4>
+      Add lookup tables and join them (left or inner) on a shared column, like a Power BI relationship. Rename, retype, hide or switch any field between dimension and measure, and every sheet updates.
+    </td>
+    <td width="50%" valign="top">
+      <a href="docs/matrix.png"><img src="docs/matrix.png" alt="A matrix with row and column totals and heat shading"></a>
+      <h4>Matrix with totals</h4>
+      A Power BI-style matrix with row, column and grand totals plus conditional heat shading. Every view also has <b>Data</b> and <b>SQL</b> tabs.
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <a href="docs/treemap.png"><img src="docs/treemap.png" alt="A treemap of fare money by borough and payment type"></a>
+      <h4>Pie, donut and treemap</h4>
+      Part-to-whole views alongside bar, line, area, scatter, heatmap, text table, tick and gauge. Labels choose a readable color for each fill.
+    </td>
+    <td width="50%" valign="top">
+      <a href="docs/dashboard-dark.png"><img src="docs/dashboard-dark.png" alt="The sample dashboard in dark mode"></a>
+      <h4>Light and dark</h4>
+      Both themes use a colorblind-checked palette. On a phone, dashboards stack into a single column.
+    </td>
+  </tr>
+</table>
+
+## Everything in the box
+
+#### 📈 13 visual types
+Bar · line · area · circle (scatter) · square (heatmap) · text table · tick · pie · donut · treemap · matrix · KPI card · gauge
+
+#### 🧰 Shelves and pills
+Columns · Rows · Color · Size · Label · Detail · Filters. Aggregations: sum, average, median, min, max, count, count distinct. Dates as continuous timelines (year, quarter, month, week, day) or discrete parts (month of year, weekday, hour). Bins and one-click histograms for any number field. Sort by value, small multiples, swap rows and columns.
+
+#### 🎛️ Dashboard canvas
+Drag to move, pull the corner to resize, tiles push each other out of the way. Tiles: sheets, KPI cards (value, sparkline, change vs the previous period), slicers (checkbox lists with counts), text. Click-to-cross-filter on every chart.
+
+#### 🧮 Formula language
+Logic: `IF / ELSEIF / ELSE`, `AND`, `OR`, `NOT`, `IIF`, `ZN`, `IFNULL`, `ISNULL`. Math: `ABS`, `ROUND`, `FLOOR`, `CEILING`, `SQRT`, `POWER`, `LOG`, `LN`, `EXP`, `SIGN`, `DIV`, `MIN`, `MAX`. Text: `UPPER`, `LOWER`, `TRIM`, `LEFT`, `RIGHT`, `MID`, `LEN`, `CONTAINS`, `STARTSWITH`, `ENDSWITH`, `REPLACE`, `STR`. Dates: `DATEPART`, `DATETRUNC`, `DATEDIFF`, `DATEADD`, `MAKEDATE`, `YEAR`, `QUARTER`, `MONTH`, `DAY`, `HOUR`, `WEEKDAY`. Aggregates: `SUM`, `AVG`, `MEDIAN`, `COUNT`, `COUNTD`, `MIN`, `MAX`.
+
+#### 🗂️ Data in, data out
+CSV, TSV and JSON in. Types are detected automatically, including currency text like `"$1,200.50"` and US dates like `1/5/2024`. Export charts as PNG or SVG, tables as CSV, and whole workbooks as `.vizora.json` (with or without the data).
+
+## Get started
+
+Vizora is a static site with no build step. Clone it and serve the folder:
 
 ```bash
 git clone https://github.com/jayeed17/vizora
@@ -49,39 +120,61 @@ python3 -m http.server 8000      # or: npx serve .
 # open http://localhost:8000
 ```
 
-## How it works
+Or just use the hosted version at **[vizora.zayeedbinkabir.com](https://vizora.zayeedbinkabir.com)**.
+
+## Under the hood
+
+- **Columnar engine.** Numbers and dates live in `Float64Array`s and text is dictionary-encoded, so filtering and grouping thousands of rows takes milliseconds.
+- **No `eval`, anywhere.** Formulas go through a hand-written tokenizer, parser and type checker, and are compiled into closures. Charts render with Vega-Lite's expression interpreter, so the app runs under a strict content security policy.
+- **Every view has a SQL twin.** The SQL tab shows a DuckDB query (joins, type fixes and calculations in a `WITH` block) that returns exactly the table on screen.
+- **Tested against DuckDB.** A headless-browser test drives every chart type, runs the generated SQL in DuckDB, and compares every row. That covers joins, calculated fields, bins, cross-filters, US dates and currency text.
 
 | File | Job |
 |---|---|
 | `js/data.js` | Parses files, infers types, applies joins, renames and type changes, materialises row-level calculations |
-| `js/formula.js` | Tokenizer, parser, type checker, row and aggregate compilers, DuckDB SQL translator (no `eval`) |
-| `js/engine.js` | Filters, groups and aggregates columnar data (typed arrays, dictionary-encoded strings) |
-| `js/sql.js` | Writes the equivalent DuckDB SQL: joins, type fixes and calculations in a `WITH` block |
+| `js/formula.js` | Tokenizer, parser, type checker, row and aggregate compilers, DuckDB SQL translator |
+| `js/engine.js` | Filters, groups and aggregates the columnar data |
+| `js/sql.js` | Writes the equivalent DuckDB SQL |
 | `js/chart.js` | Compiles shelves into Vega-Lite specs, including the pie, treemap and histogram layouts |
 | `js/visuals.js` | Matrix with totals, KPI cards, gauge |
 | `js/dashboard.js` | Canvas layout, drag/resize, slicers, cross-filtering |
-| `js/sheet.js`, `js/model.js`, `js/calc.js` | Worksheet UI, Data source view, formula editor |
+| `js/sheet.js`, `js/model.js`, `js/calc.js` | Worksheet UI, data source view, formula editor |
 
-Charts are drawn with [Vega-Lite](https://vega.github.io/vega-lite/) and CSV parsing uses [Papa Parse](https://www.papaparse.com/). Both load from jsDelivr at pinned versions.
-
-## Tests
-
-The engine is checked against **DuckDB**. A test drives every chart type in a headless browser, takes the SQL Vizora generates, runs it in DuckDB, and compares every row. That includes joins, calculated fields, bins, cross-filters, US dates and currency text.
+### Run the tests
 
 ```bash
-cd tests && npm install
-npx playwright install chromium
-cd .. && node tests/smoke.js && node tests/interact.js
+cd tests && npm install && npx playwright install chromium && cd ..
+node tests/smoke.js && node tests/interact.js
 node tests/parity.js && pip install duckdb && python3 tests/duckdb_parity.py
 ```
 
+> [!IMPORTANT]
+> Vizora is in **early alpha**. Everything runs in browser memory, so very large files will be slow, and it is not yet a replacement for Tableau or Power BI on large or live data. Known gaps: no maps, no live database connections, no table calculations (running totals, percent of total) and no dashboard export to PDF yet.
+
 ## Roadmap
 
-- Maps (latitude/longitude and region fills)
-- An optional DuckDB-WASM engine for files with millions of rows, and Parquet input
-- Parameters, table calculations (running total, percent of total), drill-down hierarchies
-- Dashboard export to PDF/PNG
+- [ ] Maps (latitude/longitude points and region fills)
+- [ ] Optional DuckDB-WASM engine for files with millions of rows, plus Parquet input
+- [ ] Parameters, table calculations and drill-down hierarchies
+- [ ] Dashboard export to PDF and PNG
+- [ ] Shareable read-only dashboard links
 
-## License
+Ideas and bug reports are welcome in [Issues](https://github.com/jayeed17/vizora/issues).
 
-MIT © 2026 Zayeed Bin Kabir. The sample taxi trips are synthetic; borough populations are from the 2020 U.S. Census.
+## Contributing
+
+Pull requests are welcome. Keep it build-free: plain ES modules, no frameworks. Run the test suite before you open a PR, and add a parity case to `tests/parity.js` if you touch the engine or the formula language.
+
+## License and credits
+
+MIT © 2026 [Zayeed Bin Kabir](https://zayeedbinkabir.com).
+
+Charts are drawn with [Vega-Lite](https://vega.github.io/vega-lite/) and CSV parsing uses [Papa Parse](https://www.papaparse.com/). The sample taxi trips are synthetic; borough populations come from the 2020 U.S. Census.
+
+Vizora is an independent project and is not affiliated with or endorsed by Tableau (Salesforce) or Microsoft Power BI. Those names are used only to describe familiar workflows.
+
+## Star history
+
+<a href="https://star-history.com/#jayeed17/vizora&Date">
+  <img src="https://api.star-history.com/svg?repos=jayeed17/vizora&type=Date" alt="Star history chart for jayeed17/vizora" width="600">
+</a>
