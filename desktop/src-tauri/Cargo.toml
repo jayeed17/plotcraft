@@ -1,6 +1,6 @@
 [package]
 name = "vizora"
-version = "0.1.1"
+version = "0.1.2"
 description = "Vizora: open-source BI studio (desktop app)"
 authors = ["Zayeed Bin Kabir"]
 license = "MIT"

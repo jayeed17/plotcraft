@@ -170,6 +170,7 @@ git tag v0.1.0 && git push origin v0.1.0
 - **No `eval`, anywhere.** Formulas go through a hand-written tokenizer, parser and type checker, and are compiled into closures. Charts render with Vega-Lite's expression interpreter, so the app runs under a strict content security policy.
 - **Every view has a SQL twin.** The SQL tab shows a DuckDB query (joins, type fixes and calculations in a `WITH` block) that returns exactly the table on screen.
 - **Tested against DuckDB.** A headless-browser test drives every chart type, runs the generated SQL in DuckDB, and compares every row. That covers joins, calculated fields, bins, cross-filters, US dates and currency text.
+- **Labels that never collide.** Labels go inside stacked segments when they fit, upright when only the length fits, and past the bar end otherwise. On lines and scatters, any label that would overlap another is dropped. One chart always uses one number style (`9,492.69` or `9.49K`), and text on a filled mark gets white or near-black ink, whichever contrasts better. A matrix test renders about 4,600 charts (every mark × layout × Color field × Label field, in light mode, dark mode and dashboard-tile size) and fails on any overlap, clipping, stray label or Vega-Lite warning.
 
 | File | Job |
 |---|---|
@@ -191,6 +192,7 @@ git tag v0.1.0 && git push origin v0.1.0
 ```bash
 cd tests && npm install && npx playwright install chromium && cd ..
 node tests/smoke.js && node tests/interact.js
+node tests/labels.js && node tests/edge.js     # every Color × Label combination, plus edge-case data
 node tests/parity.js && pip install duckdb && python3 tests/duckdb_parity.py
 ```
 

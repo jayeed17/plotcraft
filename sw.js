@@ -1,6 +1,6 @@
 // Vizora service worker: caches the app shell so Vizora opens offline and can be installed.
 // Bump VERSION when shipping changes; old caches are dropped on activate.
-const VERSION = 'vizora-v2';
+const VERSION = 'vizora-v3';
 const SHELL = [
   '/',
   '/manifest.webmanifest',
