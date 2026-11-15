@@ -190,11 +190,14 @@ git tag v0.1.0 && git push origin v0.1.0
 ### Run the tests
 
 ```bash
-cd tests && npm install && npx playwright install chromium && cd ..
-node tests/smoke.js && node tests/interact.js
-node tests/labels.js && node tests/edge.js     # every Color × Label combination, plus edge-case data
-node tests/parity.js && pip install duckdb && python3 tests/duckdb_parity.py
+python3 -m pip install -r tests/requirements.txt
+cd tests
+npm ci
+npx playwright install chromium
+npm test
 ```
+
+GitHub Actions runs the same suite on branch pushes and pull requests into `main`. The desktop release workflow also waits for the suite to pass before building installers.
 
 > [!IMPORTANT]
 > Vizora is in **early alpha**. Everything runs in browser memory, so very large files will be slow, and it is not yet a replacement for Tableau or Power BI on large or live data. Known gaps: no maps, no live database connections, no table calculations (running totals, percent of total) and no dashboard export to PDF yet.

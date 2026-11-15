@@ -14,7 +14,16 @@ async function open(opts = {}) {
   const exe = ['/opt/pw-browsers/chromium-1194/chrome-linux/chrome'].find(p => fs.existsSync(p));
   const browser = await chromium.launch(exe ? { executablePath: exe } : {});
   const context = await browser.newContext({ viewport: opts.viewport || { width: 1440, height: 900 }, colorScheme: opts.colorScheme || 'light', serviceWorkers: opts.serviceWorkers || 'block' });
+  if (opts.desktop) {
+    await context.addInitScript(() => {
+      window.__TAURI__ = {
+        dialog: {}, fs: {},
+        opener: { openUrl: async url => { window.__openedDesktopUrl = url; } }
+      };
+    });
+  }
   const page = await context.newPage();
+  const root = opts.desktop ? path.join(ROOT, 'desktop', 'dist') : ROOT;
   const errors = [];
   page.on('pageerror', e => errors.push('pageerror: ' + e.message));
   page.on('console', m => { if (/Service Worker registration blocked/.test(m.text())) return; if (m.type() === 'error' || m.type() === 'warning') errors.push(m.type() + ': ' + m.text()); });
@@ -22,7 +31,7 @@ async function open(opts = {}) {
     const url = new URL(route.request().url());
     if (url.host === 'vizora.test') {
       const p = url.pathname === '/' ? '/index.html' : url.pathname;
-      const file = path.join(ROOT, decodeURIComponent(p));
+      const file = path.join(root, decodeURIComponent(p));
       if (!fs.existsSync(file)) return route.fulfill({ status: 404, body: '' });
       return route.fulfill({ status: 200, headers: { 'content-type': TYPES[path.extname(file)] || 'application/octet-stream', 'content-security-policy': CSP }, body: fs.readFileSync(file) });
     }
@@ -31,7 +40,7 @@ async function open(opts = {}) {
     if (url.host === 'fonts.googleapis.com') return route.fulfill({ status: 200, headers: { 'content-type': 'text/css' }, body: '' });
     return route.fulfill({ status: 404, body: '' });
   });
-  if (opts.clean !== false) {
+  if (opts.clean !== false && !opts.desktop) {
     await page.goto('https://vizora.test/index.html');
     await page.evaluate(() => new Promise(r => { const q = indexedDB.deleteDatabase('vizora'); q.onsuccess = q.onerror = q.onblocked = () => r(); }));
   }

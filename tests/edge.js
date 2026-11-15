@@ -5,7 +5,6 @@
 //   - date tooltips/labels are UTC (no "previous month" shift)
 // Run: node tests/edge.js
 const { open } = require('./harness');
-const fs = require('fs');
 
 const rows = ['Store,Region,Category,Profit,Units,Sold at'];
 const regions = ['North', 'South', 'East', 'West'];
@@ -20,9 +19,7 @@ for (let i = 0; i < 600; i++) {
   const m = 1 + (i % 12), d = 1 + (i % 27);
   rows.push(`S${i % 9},${i % 53 === 0 ? '' : r},${c},${profit},${units},2024-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')} ${String(i % 24).padStart(2, '0')}:15`);
 }
-const csv = '/tmp/claude-0/edge_sales.csv';
-fs.mkdirSync('/tmp/claude-0', { recursive: true });
-fs.writeFileSync(csv, rows.join('\n') + '\n');
+const csv = { name: 'edge_sales.csv', mimeType: 'text/csv', buffer: Buffer.from(rows.join('\n') + '\n') };
 
 const C = (name, o) => Object.assign({ name, mark: 'auto' }, o);
 const cases = [
@@ -50,7 +47,7 @@ const cases = [
   const { browser, page, errors } = await open({ viewport: { width: 1280, height: 800 } });
   await page.waitForSelector('#canvas .tile', { timeout: 30000 });
   await page.setInputFiles('#fileInput', csv);
-  await page.waitForFunction(() => window.__vizora.state.DS && window.__vizora.state.DS.fields.some(f => f.name === 'Category'), null, { timeout: 15000 });
+  await page.getByText(/^Loaded edge_sales\.csv:/).waitFor({ timeout: 15000 });
   const results = await page.evaluate(async (cases) => {
     const P = await import('/js/pills.js'), St = await import('/js/store.js'), R = await import('/js/render.js'), Ch = await import('/js/chart.js'), E = await import('/js/engine.js');
     const holder = document.createElement('div'); holder.style.cssText = 'position:fixed;left:0;top:0;width:1008px;height:568px;overflow:hidden;background:var(--panel);z-index:9999'; document.body.appendChild(holder);

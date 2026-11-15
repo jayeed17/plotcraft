@@ -3,7 +3,7 @@
   "private": true,
   "description": "Browser and DuckDB parity tests for Vizora",
   "scripts": {
-    "test": "node smoke.js && node interact.js && node parity.js && python3 duckdb_parity.py"
+    "test": "node smoke.js && node interact.js && node desktop.js && node edge.js && node labels.js && node parity.js && python3 duckdb_parity.py"
   },
   "devDependencies": {
     "papaparse": "5.4.1",

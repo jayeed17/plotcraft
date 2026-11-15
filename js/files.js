@@ -79,10 +79,10 @@ export async function openWorkbook(file) {
       if (t.text != null) { const p = parseTable(t.name, t.text); p.id = t.id; tables.push(p); continue; }
       const cur = state.model.tables.find(x => x.name === t.name);
       if (!cur) throw new Error(`it needs ${t.name}. Open that file first, then open the workbook again.`);
-      tables.push(Object.assign(cur, { id: t.id }));
+      tables.push({ ...cur, id: t.id });
     }
     applyProject(wb, tables);
-    toast(`Opened ${wb.sheets.length} sheets and ${wb.dashboards.length} dashboards`);
+    toast(`Opened ${wb.sheets.length} sheets and ${state.dashboards.length} dashboards`);
   } catch (e) { toast(`Could not open the workbook: ${e.message}`); }
 }
 export function applyProject(p, tables) {

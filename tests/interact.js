@@ -80,8 +80,7 @@ const check = (cond, msg) => { console.log((cond ? 'PASS ' : 'FAIL ') + msg); if
   await page.screenshot({ path: `${OUT}/i-source.png`, fullPage: true });
 
   // join a new table from a file
-  fs.writeFileSync('/tmp/claude-0/payment_codes.csv', 'Payment method,code,is_electronic\nCredit card,1,yes\nCash,2,no\nNo charge,3,no\nDispute,4,no\n');
-  await page.setInputFiles('#addTableInput', '/tmp/claude-0/payment_codes.csv');
+  await page.setInputFiles('#addTableInput', { name: 'payment_codes.csv', mimeType: 'text/csv', buffer: Buffer.from('Payment method,code,is_electronic\nCredit card,1,yes\nCash,2,no\nNo charge,3,no\nDispute,4,no\n') });
   await page.waitForSelector('#jOk'); await page.waitForTimeout(300);
   const stats = await page.textContent('#jStats');
   check(/9,000/.test(stats), 'join editor finds the right key: ' + stats.slice(0, 60));
@@ -94,10 +93,32 @@ const check = (cond, msg) => { console.log((cond ? 'PASS ' : 'FAIL ') + msg); if
   check(kept.calc && kept.join && kept.tiles === 13, 'reload restores the project ' + JSON.stringify(kept));
 
   // open a different CSV as a new project
-  fs.writeFileSync('/tmp/claude-0/sales.csv', 'Order Date,Region,Sales\n1/5/2024,East,"$1,200.50"\n2/14/2024,West,$980.00\n3/3/2024,East,"$2,410.00"\n');
-  await page.setInputFiles('#fileInput', '/tmp/claude-0/sales.csv'); await page.waitForTimeout(1000);
+  await page.setInputFiles('#fileInput', { name: 'sales.csv', mimeType: 'text/csv', buffer: Buffer.from('Order Date,Region,Sales\n1/5/2024,East,"$1,200.50"\n2/14/2024,West,$980.00\n3/3/2024,East,"$2,410.00"\n') }); await page.waitForTimeout(1000);
   const f = await page.evaluate(() => window.__vizora.state.DS.fields.map(x => x.name + ':' + x.type));
   check(f.includes('Sales:number') && f.includes('Order Date:date'), 'new CSV infers types ' + f.join(', '));
+  const workbook = await page.evaluate(async () => {
+    const { projectJSON } = await import('/js/store.js');
+    return projectJSON(true);
+  });
+  const uploadWorkbook = data => page.setInputFiles('#wbInput', {
+    name: 'sales.vizora.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(data))
+  });
+  const tableId = workbook.tables[0].id;
+  await uploadWorkbook({
+    ...workbook,
+    tables: [
+      { ...workbook.tables[0], text: undefined, id: 'changed-id' },
+      { id: 'missing-id', name: 'missing.csv' }
+    ]
+  });
+  await page.getByText(/Could not open the workbook.*missing.csv/).waitFor();
+  check(await page.evaluate(() => window.__vizora.state.model.tables[0].id) === tableId,
+    'failed layout import preserves the current table ID');
+
+  await uploadWorkbook({ ...workbook, app: 'plotcraft', dashboards: undefined });
+  await page.getByText('Opened 1 sheets and 0 dashboards').waitFor();
+  check(await page.evaluate(() => window.__vizora.state.DS.n) === 3,
+    'legacy workbook without dashboards restores the data');
   console.log('PAGE ERRORS', [...new Set(errors)].slice(0, 10).join('\n') || 'none');
   if ([...new Set(errors)].length) failures++;
   await browser.close();

@@ -174,15 +174,18 @@ new MutationObserver(rerender).observe(document.documentElement, { attributes: t
 if ('serviceWorker' in navigator && !isDesktop && (location.protocol === 'https:' || location.hostname === 'localhost')) {
   window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
 }
-let installPrompt = null;
-window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installPrompt = e; $('#installBtn').hidden = false; });
-window.addEventListener('appinstalled', () => { installPrompt = null; $('#installBtn').hidden = true; toast('Vizora is installed. Open it from your apps.'); });
-$('#installBtn').addEventListener('click', async () => {
-  if (!installPrompt) return;
-  installPrompt.prompt();
-  try { await installPrompt.userChoice; } catch (e) {}
-  installPrompt = null; $('#installBtn').hidden = true;
-});
+const installButton = $('#installBtn');
+if (installButton && !isDesktop) {
+  let installPrompt = null;
+  window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installPrompt = e; installButton.hidden = false; });
+  window.addEventListener('appinstalled', () => { installPrompt = null; installButton.hidden = true; toast('Vizora is installed. Open it from your apps.'); });
+  installButton.addEventListener('click', async () => {
+    if (!installPrompt) return;
+    installPrompt.prompt();
+    try { await installPrompt.userChoice; } catch (e) {}
+    installPrompt = null; installButton.hidden = true;
+  });
+}
 if (isDesktop) {
   document.documentElement.classList.add('desktop');
   // keep the app window on Vizora: web links open in the system browser
