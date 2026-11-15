@@ -90,7 +90,6 @@ function luminance(hex) {
   return hexToRgb(hex).map(v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }).reduce((a, v, i) => a + v * [0.2126, 0.7152, 0.0722][i], 0);
 }
 const contrast = (a, b) => { const x = luminance(a), y = luminance(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
-// ink that reads on a filled mark: white, or near-black on light fills (yellow, light ramp steps)
 // white unless near-black reads clearly better (white keeps a slight edge on mid-tone brand colours)
 const inkOn = fill => { const cw = contrast(fill, '#ffffff'), cb = contrast(fill, '#0b0b0b'); return cw >= 4.5 || cw >= cb * 0.85 ? '#ffffff' : '#0b0b0b'; };
 // per-row ink as a value condition: no scale, so it never touches the series legend
@@ -377,7 +376,7 @@ function compileTreemap(sh, res, W, H, th, opts) {
   };
   if (colorP) enc.color = encColor(colorP, { rows: laid, plan: res.plan }, th); else enc.color = { value: th.pal.single };
   const hl = highlightEnc(opts.highlight); if (hl) enc.opacity = hl;
-  // label ink by the fill behind it: white, except near-black on light fills (yellow, light ramp steps)
+  // label ink picked by contrast with the fill behind it
   const fillOf = fillResolver(enc.color, laid, th);
   for (const r of laid) r.__tc = inkOn(fillOf(r));
   const tc = inkEnc('__tc');
